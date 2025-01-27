@@ -1,0 +1,13 @@
+README.txt
+setup.py
+src/dosecoef/__init__.py
+src/dosecoef/dosecoef.py
+src/dosecoef/dosecoeferror.py
+src/dosecoef.egg-info/PKG-INFO
+src/dosecoef.egg-info/SOURCES.txt
+src/dosecoef.egg-info/dependency_links.txt
+src/dosecoef.egg-info/top_level.txt
+src/dosecoef/data/CoefPX.pxs
+src/dosecoef/data/correspondance.pxs
+test/test_dosecoef.py
+test/test_dosecoefRefSupport.py

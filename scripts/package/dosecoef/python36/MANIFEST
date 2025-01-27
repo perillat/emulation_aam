@@ -1,0 +1,7 @@
+setup.py
+src/doseCoef/DoseCoef.py
+src/doseCoef/DoseCoefError.py
+src/doseCoef/__init__.py
+src/doseCoef/data/CoefPX.pxs
+src/doseCoef/data/SolubDefault.pxs
+test/test_DoseCoef.py

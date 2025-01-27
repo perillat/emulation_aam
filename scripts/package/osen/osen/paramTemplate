@@ -1,0 +1,21 @@
+DateDeb Jour : 18
+DateDeb Mois : 01
+DateDeb Annee : 2005 
+DateDeb Heure : 0
+DateDeb Minute : 0
+DateFin Jour : 18
+DateFin Mois : 01
+DateFin Annee : 2005 
+DateFin Heure : 20
+DateFin Minute : 0
+Modele de dispersion :BOUFFEE
+Nombre de realisation:1
+Format des donnees Meteorologiques : NC
+Nom du fichier meteo : meteo.nc
+Format des donnees de rejet : NC
+Nom du fichier Source : source.nc
+Format des donnees de resultats demandes : NC
+Nom du fichier de resultats demandes : resDemande.nc
+Format des resultats : NC
+Nom du fichier de resultat : res.nc
+

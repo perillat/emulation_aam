@@ -1,0 +1,61 @@
+/ - Date de début et date de fin de calcul
+DateDebD : DateDeb Jour : Req : int : : 1<x<31
+DateDebM : DateDeb Mois : Req: int : : 1<x<12
+DateDebY : DateDeb Annee : Req : int : : 1900<x<2050
+DateDebH : DateDeb Heure : Req : int : : 0<x<24
+DateDebMi : DateDeb Minute : Req : int : : 0<x<59
+
+DateFinD : DateFin Jour : Req : int : : 1<x<31
+DateFinM : DateFin Mois : Req : int : : 1<x<12
+DateFinY : DateFin Annee : Req : int : : 1900<x<2050
+DateFinH : DateFin Heure : Req : int : : 0<x<24
+DateFinMi : DateFin Minute : Req : int : : 0<x<59
+
+/ - Paramètres relatifs aux modèles physiques
+
+/ - Modèle d'advection
+DispType : Modele de dispersion : Req : str : BOUFFEE : BOUFFEE | MIXTE | LAGRANGIEN
+NbEvent : Nombre de realisation : Opt : int : 1 : 1<x<50
+
+/ - Précision du calcul
+FormuleGauss : Formule de gauss :  Opt : str : EXACT : EXACT | APPROCHE
+SeuilGauss : Seuil gauss x/sigma : Opt : float: 4 : 2<x<1000000
+TauxReconstr : Taux de recouvrement pour la reconstruction de panache : Opt : float : 2 : 0.5 <x< 3.0
+
+
+/ - Modèle de diffusion
+SigType : Loi d'ecart-type :  Opt : str:  BRIGGS_RURAL : BRIGGS_RURAL | BRIGGS_URBAN | PASQUILL | DOURY | DIFF | CONST | SIMILARITY
+FactBat : Facteur de battement : Opt : float : 1. : 1.<x< 5.
+CoeffDiffH : Coeff de diffusivite horizontal : Opt: float : 10. : 1.<x<500.
+CoeffDiffV : Coeff de diffusivite vertical : Opt: float : 10. : 1.<x<500.
+
+/ - Modèle de Sol
+
+
+/ -Pas de temps
+TypePasDeTemps : Mode d'évaluation du pas de temps : Opt : str : Auto : Auto | Give
+PasDeTempsADR : Valeur du pas de temps ADR (s) : Opt : float : 10. : 0.1<x<3600.
+CoefPasDeTempsApPuff : Frequence d'appauvrissement des bouffees (entier) : Opt : int : 1 : 1<x<100
+CoefPasDeTempsFilPuff : Frequence de filiation des bouffees (entier) : Opt : int : 1 : 1<x<100
+CoefPasDeTempsDepot : Frequence de calcul du depot (entier) : Opt : int:  1 : 1<x<100
+CoefPasDeTempsInteg : Frequence de calcul des valeurs integrees (entier) : Opt : int: 1 : 1<x<100
+CoefPasDeTempsReconstr : Frequence de reconstruction de panache (entier) : Opt : int : 100000 : 1<x<100000
+
+/ - Paramètres relatifs à la météorologie
+MeteoDataType : Format des donnees Meteorologiques : Req : str :  : ASCII | NC
+MeteoFile : Nom du fichier meteo : Req : str : dataFile/meteo.dat
+
+/ - Paramètres relatifs aux TS
+SourceDataType :  Format des donnees de rejet : Req : str :  : ASCII | NC
+SourceFile :  Nom du fichier Source : Req: str :dataFile/source.dat
+
+/ - Paramètres relatifs aux résultats
+ResultDataType : Format des donnees de resultats demandes : Req : str :  : ASCII | NC
+ResultFile : Nom du fichier de resultats demandes : Req : str :dataFile/mes.px
+ResultDataTypeOut : Format des resultats : Req :str: : ASCII | NC
+ResultFileOut : Nom du fichier de resultat : Req : str :dataFile/res.px
+
+
+/ - Paramètres relatifs aux données statiques
+RadioElementFile : Nom du fichier de radio element :  Opt: str :dataFile/Ref.pxs
+FamillesFile : Nom du fichier de filiation : Opt :str: dataFile/familles.pxs
