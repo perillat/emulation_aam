@@ -316,14 +316,8 @@ if __name__ == "__main__":
                 plt.close()
 
 
-
                 ## Graph 2D
                 th = np.log(50)
-
-
-                ## Graph 2D
-                th = np.log(50)
-
 
                 # Simulation vs Metamodel
                 for ii in range(dose_simulation.shape[0]):
@@ -337,14 +331,6 @@ if __name__ == "__main__":
                     data_to_plot2[data_to_plot2 < 0] = 0
 
                     levels = list(th * np.linspace(0, 2, 11))
-
-                    # ax = plt.subplot(131)
-                    # ax.axis('off')
-                    # for i, value in enumerate(doe_complete[ii, :]):
-                    #     variable_name = variable_names[i]
-                    #     ax.text(0.5, 0.85 - i*0.15, variable_name + f' : {value:.2f}',
-                    #             horizontalalignment='center', verticalalignment='center',
-                    #             transform=ax.transAxes)
 
                     # Premier subplot
                     ax1 = axs[0]
@@ -407,7 +393,6 @@ if __name__ == "__main__":
                         ax1.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=[th], colors='red')
                     ax1.set_xlim((-4, 4))
                     ax1.set_ylim((-1, 7.5))
-
 
                     # Deuxième subplot
                     ax2 = axs[1]
