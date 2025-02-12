@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy.spatial import Voronoi, voronoi_plot_2d
 from shapely.geometry import Polygon, box
+import matplotlib.ticker as ticker
 
 ## Script to create emulators from previously run simulations.
 
@@ -319,14 +320,23 @@ if __name__ == "__main__":
                 ## Graph 2D
                 th = np.log(50)
 
+
+                ## Graph 2D
+                th = np.log(50)
+
+
+                # Simulation vs Metamodel
                 for ii in range(dose_simulation.shape[0]):
-                    fig = plt.figure(figsize=(11,5))
+
+                    fig, axs = plt.subplots(1, 2, figsize=(12, 5), constrained_layout=True)
 
                     CoordX0 = np.vstack([CoordX, CoordX[0,:]])
                     CoordY0 = np.vstack([CoordY, CoordY[0,:]])
                     data_to_plot1 = np.vstack([dose_simulation[ii], dose_simulation[ii,0,:]])
                     data_to_plot2 = np.vstack([dose_metamodel[ii], dose_metamodel[ii,0,:]])
                     data_to_plot2[data_to_plot2 < 0] = 0
+
+                    levels = list(th * np.linspace(0, 2, 11))
 
                     # ax = plt.subplot(131)
                     # ax.axis('off')
@@ -336,23 +346,37 @@ if __name__ == "__main__":
                     #             horizontalalignment='center', verticalalignment='center',
                     #             transform=ax.transAxes)
 
-                    ax = plt.subplot(121)
-                    plt.contourf(CoordX0/1000, CoordY0/1000, data_to_plot1, extend='max',
-                                 levels=list(th * np.linspace(0, 2, 11)))
-                    if data_to_plot1.max() > th :
-                        plt.contour(CoordX0/1000, CoordY0/1000, data_to_plot1,
-                                    levels=[th], colors='red')
-                    plt.xlim((-4, 4))
-                    plt.ylim((-1, 7.5))
+                    # Premier subplot
+                    ax1 = axs[0]
+                    contour1 = ax1.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=levels, extend='max')
+                    if data_to_plot1.max() > th:
+                        ax1.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=[th], colors='red')
+                    ax1.set_xlim((-4, 4))
+                    ax1.set_ylim((-1, 7.5))
 
-                    ax = plt.subplot(122)
-                    plt.contourf(CoordX0/1000, CoordY0/1000, data_to_plot2, extend='max',
-                                 levels=list(th * np.linspace(0, 2, 11)))
-                    if data_to_plot2.max() > th :
-                        plt.contour(CoordX0/1000, CoordY0/1000, data_to_plot2,
-                                    levels=[th], colors='red')
-                    plt.xlim((-4, 4))
-                    plt.ylim((-1, 7.5))
+
+                    # Deuxième subplot
+                    ax2 = axs[1]
+                    contour2 = ax2.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=levels, extend='max')
+                    if data_to_plot2.max() > th:
+                        ax2.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=[th], colors='red')
+                    ax2.set_xlim((-4, 4))
+                    ax2.set_ylim((-1, 7.5))
+
+                    # Ajout de la colorbar commune
+                    cbar = fig.colorbar(contour2, ax=axs, orientation='vertical', fraction=0.02, pad=0.04)
+
+                    # Fonction pour transformer le log(dose) en dose réelle
+                    def log_to_dose(val, pos):
+                        dose_real = np.exp(val)
+                        return f"{dose_real:.1f}"
+
+                    # Appliquer la transformation aux ticks de la colorbar
+                    cbar.set_ticks(levels)
+                    cbar.ax.yaxis.set_major_formatter(ticker.FuncFormatter(log_to_dose))
+
+                    # Mise à jour du label de la colorbar
+                    cbar.set_label("Dose rate (mSv)")
 
                     osen.makedir(os.path.join(figure_path, dosetype, stability, FB))
                     plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "%05d.png" %ii),
@@ -360,6 +384,135 @@ if __name__ == "__main__":
                     plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "%05d.pdf" %ii),
                                 dpi=300, facecolor="w", bbox_inches="tight", pad_inches=0.05)
                     plt.close()
+
+
+
+                # Simulation vs Projection
+                for ii in [5]:
+
+                    fig, axs = plt.subplots(1, 2, figsize=(6, 2.5), constrained_layout=True)
+
+                    CoordX0 = np.vstack([CoordX, CoordX[0,:]])
+                    CoordY0 = np.vstack([CoordY, CoordY[0,:]])
+                    data_to_plot1 = np.vstack([dose_simulation[ii], dose_simulation[ii,0,:]])
+                    data_to_plot2 = np.vstack([dose_projection[ii], dose_projection[ii,0,:]])
+                    data_to_plot2[data_to_plot2 < 0] = 0
+
+                    levels = list(th * np.linspace(0, 2, 11))
+
+                    # Premier subplot
+                    ax1 = axs[0]
+                    contour1 = ax1.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=levels, extend='max')
+                    if data_to_plot1.max() > th:
+                        ax1.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=[th], colors='red')
+                    ax1.set_xlim((-4, 4))
+                    ax1.set_ylim((-1, 7.5))
+
+
+                    # Deuxième subplot
+                    ax2 = axs[1]
+                    contour2 = ax2.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=levels, extend='max')
+                    if data_to_plot2.max() > th:
+                        ax2.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=[th], colors='red')
+                    ax2.set_xlim((-4, 4))
+                    ax2.set_ylim((-1, 7.5))
+
+                    # Ajout de la colorbar commune
+                    cbar = fig.colorbar(contour2, ax=axs, orientation='vertical', fraction=0.02, pad=0.04)
+
+                    # Fonction pour transformer le log(dose) en dose réelle
+                    def log_to_dose(val, pos):
+                        dose_real = np.exp(val)
+                        return f"{dose_real:.1f}"
+
+                    # Appliquer la transformation aux ticks de la colorbar
+                    cbar.set_ticks(levels)
+                    cbar.ax.yaxis.set_major_formatter(ticker.FuncFormatter(log_to_dose))
+
+                    # Mise à jour du label de la colorbar
+                    cbar.set_label("Dose rate (mSv)")
+
+                    osen.makedir(os.path.join(figure_path, dosetype, stability, FB))
+                    plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "%05d_projection.png" %ii),
+                                dpi=300, facecolor="w", bbox_inches="tight", pad_inches=0.05)
+                    plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "%05d_projection.pdf" %ii),
+                                dpi=300, facecolor="w", bbox_inches="tight", pad_inches=0.05)
+                    plt.close()
+
+
+
+                ## Plots the 4 figures
+
+                # Sélectionner les indices des simulations à tracer
+                indices = [5, 62, 251, 216]
+
+                # Création de la figure principale avec 4 lignes et 2 colonnes
+                fig, axs = plt.subplots(4, 2, figsize=(9, 20), constrained_layout=True)
+
+                # Ajustement des espaces entre les subplots pour éviter l'écrasement
+                plt.subplots_adjust(hspace=0.3, wspace=0.1)
+
+                # Valeur du seuil en log
+                th = np.log(50)
+
+                # Définition des niveaux pour la colorbar
+                levels = list(th * np.linspace(0, 2, 11))
+
+                # Labels des sous-figures
+                subplot_labels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)', '(g)', '(h)']
+
+                # Boucle sur les 4 jeux de données
+                for row, ii in enumerate(indices):
+                    CoordX0 = np.vstack([CoordX, CoordX[0, :]])
+                    CoordY0 = np.vstack([CoordY, CoordY[0, :]])
+                    data_to_plot1 = np.vstack([dose_simulation[ii], dose_simulation[ii, 0, :]])
+                    data_to_plot2 = np.vstack([dose_metamodel[ii], dose_metamodel[ii, 0, :]])
+                    data_to_plot2[data_to_plot2 < 0] = 0
+
+                    # Premier subplot de la ligne
+                    ax1 = axs[row, 0]
+                    contour1 = ax1.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=levels, extend='max')
+                    if data_to_plot1.max() > th:
+                        ax1.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot1, levels=[th], colors='red')
+                    ax1.set_xlim((-4, 4))
+                    ax1.set_ylim((-1, 7.5))
+
+                    # Deuxième subplot de la ligne
+                    ax2 = axs[row, 1]
+                    contour2 = ax2.contourf(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=levels, extend='max')
+                    if data_to_plot2.max() > th:
+                        ax2.contour(CoordX0 / 1000, CoordY0 / 1000, data_to_plot2, levels=[th], colors='red')
+                    ax2.set_xlim((-4, 4))
+                    ax2.set_ylim((-1, 7.5))
+
+                    # Ajouter les labels sous les figures
+                    ax1.annotate(subplot_labels[row * 2], xy=(0.5, -0.15), xycoords='axes fraction',
+                                 fontsize=14, ha='center', fontweight='bold')
+                    ax2.annotate(subplot_labels[row * 2 + 1], xy=(0.5, -0.15), xycoords='axes fraction',
+                                 fontsize=14, ha='center', fontweight='bold')
+
+                # Ajout d'une colorbar commune
+                cbar = fig.colorbar(contour2, ax=axs[:, 1], orientation='vertical', fraction=0.02, pad=0.04)
+
+                # Fonction pour transformer le log(dose) en dose réelle
+                def log_to_dose(val, pos):
+                    dose_real = np.exp(val)
+                    return f"{dose_real:.1f}"
+
+                # Appliquer la transformation aux ticks de la colorbar
+                cbar.set_ticks(levels)
+                cbar.ax.yaxis.set_major_formatter(ticker.FuncFormatter(log_to_dose))
+                cbar.set_label("Dose rate (mSv)")
+
+                # Sauvegarde de la figure combinée
+                plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "combined_figure.png"),
+                            dpi=300, facecolor="w", bbox_inches="tight", pad_inches=0.05)
+                plt.savefig(os.path.join(figure_path, dosetype, stability, FB, "combined_figure.pdf"),
+                            dpi=300, facecolor="w", bbox_inches="tight", pad_inches=0.05)
+
+                plt.show()
+
+
 
 
                 ## FMS (histogram)
@@ -491,7 +644,7 @@ if __name__ == "__main__":
                     ax2 = plt.subplot(122)
                     plt.hist((s_meta-s_simu), bins=np.linspace(-5.5, 5.5, 12), density=True)
                     plt.xlabel("Erreur (km²)")
-                     plt.ylabel("Fréquence")
+                    plt.ylabel("Fréquence")
                     text_str = f"MEA: {MEA:.2f} km\nQ95: {Q95:.2f} km"
                     props = dict(boxstyle='round,pad=0.3', facecolor='wheat', alpha=0.5)
                     ax2.text(0.05, 0.95, text_str, transform=ax2.transAxes, fontsize=10,
